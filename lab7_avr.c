@@ -32,7 +32,7 @@ int main()
 	while(1) //raspberry pi controls reset line
 	{
 		printf("ADC value is %d\n\r",read_adc());
-		_delay_ms(1000);
+		_delay_ms(100);
 	}
 }
 
