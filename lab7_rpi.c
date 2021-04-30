@@ -51,7 +51,7 @@ int main(int argc, char * argv[])
 	// Constantly read from serial input
 	while(fgets(buffer,100,serial_in)) {
 		// scan for float value
-		fdscan = sscanf(buffer,"The reported temperature is %u mV\n",&sensor_temp); 
+		fdscan = sscanf(buffer,"The reported voltage is %u mV\n",&sensor_temp); 
 		if (fdscan < 0) {
 			printf("Couldn't receive data from serial port\n");
 			exit(errno);
