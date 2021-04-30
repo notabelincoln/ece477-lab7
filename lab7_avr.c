@@ -22,9 +22,6 @@ void update_clock_speed(void);
 int main()
 {
 	char buffer[100] = "no string yet";
-	unsigned int railv;
-	char ts_enable;
-	unsigned int ts;
 	update_clock_speed();  //adjust OSCCAL
 	init_serial(); 
 	init_adc();
@@ -37,20 +34,9 @@ int main()
 	// Configure timer
 	while(1) //raspberry pi controls reset line
 	{
-		railv = (1.1*1023*10000)/read_adc();
-
-		// determine whether to provide timestamps
-		if (!ts_enable) {
-			printf("The power rail is approximately %u\.%uV\n\r",
-					railv/10000,railv%10000);
-		} else {
-			printf("The power rail at %u s is approximately %u\.%uV\n\r",
-					ts,railv/10000,railv%10000);
-		}
+		printf("%u\n\r",read_adc());
 		_delay_ms(1000);
-		if(ts_enable)
-			ts++;
-	}    
+	}
 }
 
 
@@ -111,8 +97,8 @@ int serial_getchar(FILE *fp)
 }     
 void init_adc(void)
 {
-	ADMUX = (1<<REFS0) | 14; //AVCC reference and 1.1 bandgap measurement
-	ADCSRA = (1<<ADEN) | (3<<ADPS0); // enable ADC, prescaler=64
+	ADMUX = (3<<REFS0) | 0x80; // tempearture sensor and 1.1 V bandgep reference
+	ADCSRA = (1<<ADEN) | (6<<ADPS0); // enable ADC, prescaler=64
 	ADCSRB = 0;
 	DIDR0 = 0;
 } 
