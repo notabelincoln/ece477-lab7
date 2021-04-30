@@ -33,7 +33,7 @@ int main()
 	while(1) //raspberry pi controls reset line
 	{
 		temp_float = read_adc()*1.1/1024;
-		printf("The reported temperature is %d mV\n\r",(int)(temp_float*1000));
+		printf("The reported voltage is %d mV\n\r",(int)(temp_float*1000));
 		_delay_ms(1000);
 	}
 }
