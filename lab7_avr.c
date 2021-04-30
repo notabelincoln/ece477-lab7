@@ -22,19 +22,18 @@ void update_clock_speed(void);
 int main()
 {
 	char buffer[100] = "no string yet";
+	float temp_float;
 	update_clock_speed();  //adjust OSCCAL
 	init_serial(); 
 	init_adc();
 	_delay_ms(1000); //let serial work itself out
-	ts_enable = 0;
-	while(strncmp("START",&buffer[0],strlen("START"))) {
+	while(strncmp("START",&buffer[0],strlen("START")))
 		fgets(buffer,100,stdin);
-		sscanf(buffer,"START %u\n",&ts_enable);
-	}
 	// Configure timer
 	while(1) //raspberry pi controls reset line
 	{
-		printf("%u\n\r",read_adc());
+		temp_float = read_adc()*1.1/1024;
+		printf("The reported temperature is %d mV\n\r",(int)(temp_float*1000));
 		_delay_ms(1000);
 	}
 }
@@ -97,7 +96,7 @@ int serial_getchar(FILE *fp)
 }     
 void init_adc(void)
 {
-	ADMUX = (3<<REFS0) | 0x80; // tempearture sensor and 1.1 V bandgep reference
+	ADMUX = (3<<REFS0) | 0x08; // tempearture sensor and 1.1 V bandgep reference
 	ADCSRA = (1<<ADEN) | (6<<ADPS0); // enable ADC, prescaler=64
 	ADCSRB = 0;
 	DIDR0 = 0;
