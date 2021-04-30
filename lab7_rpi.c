@@ -51,7 +51,7 @@ int main(int argc, char * argv[])
 	// Constantly read from serial input
 	while(fgets(buffer,100,serial_in)) {
 		// scan for adc value in string
-		fdscan = sscanf(buffer,"ADC value is %u\n",&adc_val); 
+		fdscan = sscanf(buffer,"\nADC value is %u\n",&adc_val); 
 		if (fdscan < 0) {
 			printf("Couldn't receive data from serial port\n");
 			exit(errno);
