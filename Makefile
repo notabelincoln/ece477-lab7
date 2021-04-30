@@ -34,6 +34,7 @@ $(AVRTARGET).hex:	$(AVRTARGET)
 flash:	$(AVRTARGET).hex $(AVRCONFIG)
 	avrdude -C $(AVRCONFIG) -c pi_1 -p m88p -U flash:w:$(AVRTARGET).hex:i
 
+.PHONY: clean
 clean:
 	rm -f *~ *.o *.hex $(RPITARGET) $(AVRTARGET)
 
