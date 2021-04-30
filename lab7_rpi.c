@@ -15,10 +15,10 @@ int main(int argc, char * argv[])
 	FILE *disk_out;
 	int fdserial, fdscan;
 	int i; // counter variable
-	int sensor_temp; // sensor temperature
-	char buffer[100]; // incoming buffer
-	char str_temp[16]; // converts temperature to string
-	char *filename = "./sensor_temperatures.dat"; // output file
+	int adc_val; // adc_value
+	char buffer[100]; // incoming serial data buffer
+	char str_adc[16]; // string for storing adc value
+	char *filename = "./adc_values.csv"; // output file
 	char debug; // debug flag
 
 	debug = 0; // check if debug flag is enabled
@@ -50,22 +50,25 @@ int main(int argc, char * argv[])
 
 	// Constantly read from serial input
 	while(fgets(buffer,100,serial_in)) {
-		// scan for float value
-		fdscan = sscanf(buffer,"The reported voltage is %u mV\n",&sensor_temp); 
+		// scan for adc value in string
+		fdscan = sscanf(buffer,"ADC value is %u\n",&adc_val); 
 		if (fdscan < 0) {
 			printf("Couldn't receive data from serial port\n");
 			exit(errno);
 		}
 
+		// convert adc value to string
 		if (debug) {
 			printf("%s",buffer);
 			fflush(stdout);
 		}
+		//clear input buffer
 		memset(buffer,0,100);
 
-		sprintf(str_temp, "%u\n", sensor_temp);
-		fputs(str_temp,disk_out); // write float to file
-		fflush(disk_out); // flush output, prepare for next input
+		// print adc value to the file and prepare for next value
+		sprintf(str_adc, "%u\n", adc_val);
+		fputs(str_adc,disk_out);
+		fflush(disk_out);
 	}
 }
 
