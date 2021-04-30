@@ -22,7 +22,6 @@ void update_clock_speed(void);
 int main()
 {
 	char buffer[100] = "no string yet";
-	float temp_float;
 	update_clock_speed();  //adjust OSCCAL
 	init_serial(); 
 	init_adc();
@@ -32,8 +31,7 @@ int main()
 	// Configure timer
 	while(1) //raspberry pi controls reset line
 	{
-		temp_float = read_adc()*1.1/1024;
-		printf("The reported voltage is %d mV\n\r",(int)(temp_float*1000));
+		printf("ADC value is %d\n\r",read_adc());
 		_delay_ms(1000);
 	}
 }
