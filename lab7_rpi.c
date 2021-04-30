@@ -14,12 +14,12 @@ int main(int argc, char * argv[])
 	FILE *serial_in;
 	FILE *disk_out;
 	int fdserial, fdscan;
-	int i;
-	float railv;
-	char buffer[100];
-	char strfloat[16];
-	char *filename = "./rail_voltages.dat";
-	char debug;
+	int i; // counter variable
+	int sensor_temp; // sensor temperature
+	char buffer[100]; // incoming buffer
+	char str_temp[16]; // converts temperature to string
+	char *filename = "./sensor_temperatures.dat"; // output file
+	char debug; // debug flag
 
 	debug = 0; // check if debug flag is enabled
 	for (i = 0; i < argc; i++) {
@@ -51,21 +51,20 @@ int main(int argc, char * argv[])
 	// Constantly read from serial input
 	while(fgets(buffer,100,serial_in)) {
 		// scan for float value
-		fdscan = sscanf(buffer,"\nThe power rail is approximately %fV",&railv); 
+		fdscan = sscanf(buffer,"The reported temperature is %u mV\n",&sensor_temp); 
 		if (fdscan < 0) {
 			printf("Couldn't receive data from serial port\n");
 			exit(errno);
-
 		}
 
 		if (debug) {
-			printf("%s - %f\n",buffer,railv);
+			printf("%s",buffer);
 			fflush(stdout);
 		}
 		memset(buffer,0,100);
 
-		sprintf(strfloat, "%.4f\n", railv); // convert float to string
-		fputs(strfloat,disk_out); // write float to file
+		sprintf(str_temp, "%u\n", sensor_temp);
+		fputs(str_temp,disk_out); // write float to file
 		fflush(disk_out); // flush output, prepare for next input
 	}
 }
